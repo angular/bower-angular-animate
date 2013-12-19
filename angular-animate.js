@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.6-build.2016+sha.937caab
+ * @license AngularJS v1.2.6-build.2017+sha.cef084a
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -294,6 +294,13 @@ angular.module('ngAnimate', ['ng'])
         });
       });
 
+      var classNameFilter = $animateProvider.classNameFilter();
+      var isAnimatableClassName = !classNameFilter
+              ? function() { return true; }
+              : function(className) {
+                return classNameFilter.test(className);
+              };
+
       function lookup(name) {
         if (name) {
           var matches = [],
@@ -575,17 +582,20 @@ angular.module('ngAnimate', ['ng'])
         and the onComplete callback will be fired once the animation is fully complete.
       */
       function performAnimation(animationEvent, className, element, parentElement, afterElement, domOperation, doneCallback) {
-        var node = extractElementNode(element);
+        var currentClassName, classes, node = extractElementNode(element);
+        if(node) {
+          currentClassName = node.className;
+          classes = currentClassName + ' ' + className;
+        }
+
         //transcluded directives may sometimes fire an animation using only comment nodes
         //best to catch this early on to prevent any animation operations from occurring
-        if(!node) {
+        if(!node || !isAnimatableClassName(classes)) {
           fireDOMOperation();
           closeAnimation();
           return;
         }
 
-        var currentClassName = node.className;
-        var classes = currentClassName + ' ' + className;
         var animationLookup = (' ' + classes).replace(/\s+/g,'.');
         if (!parentElement) {
           parentElement = afterElement ? afterElement.parent() : element.parent();
