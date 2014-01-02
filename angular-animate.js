@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.7-build.2036+sha.e415e91
+ * @license AngularJS v1.2.7-build.2038+sha.50bf029
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1147,7 +1147,7 @@ angular.module('ngAnimate', ['ng'])
           var propertyStyle = timings.transitionPropertyStyle;
           if(propertyStyle.indexOf('all') == -1) {
             style += CSS_PREFIX + 'transition-property: ' + propertyStyle + ';';
-            style += CSS_PREFIX + 'transition-duration: ' + timings.transitionDurationStyle + 's;';
+            style += CSS_PREFIX + 'transition-duration: ' + timings.transitionDurationStyle + ';';
             appliedStyles.push(CSS_PREFIX + 'transition-property');
             appliedStyles.push(CSS_PREFIX + 'transition-duration');
           }
