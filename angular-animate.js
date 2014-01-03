@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.7-build.2045+sha.6a6f71f
+ * @license AngularJS v1.2.7-build.2057+sha.3d38fff
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -616,9 +616,14 @@ angular.module('ngAnimate', ['ng'])
         }
 
         var animations = [];
+
         //only add animations if the currently running animation is not structural
         //or if there is no animation running at all
-        if(!ngAnimateState.running || !(isClassBased && ngAnimateState.structural)) {
+        var allowAnimations = isClassBased ?
+          !ngAnimateState.disabled && (!ngAnimateState.running || !ngAnimateState.structural) :
+          true;
+
+        if(allowAnimations) {
           forEach(matches, function(animation) {
             //add the animation to the queue to if it is allowed to be cancelled
             if(!animation.allowCancel || animation.allowCancel(element, animationEvent, className)) {
