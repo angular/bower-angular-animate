@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.9-build.2133+sha.dde1b29
+ * @license AngularJS v1.2.9-build.2134+sha.1413328
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -256,14 +256,12 @@ angular.module('ngAnimate', ['ng'])
    */
   .factory('$$animateReflow', ['$window', '$timeout', function($window, $timeout) {
     var requestAnimationFrame = $window.requestAnimationFrame       ||
-                                $window.mozRequestAnimationFrame    ||
                                 $window.webkitRequestAnimationFrame ||
                                 function(fn) {
                                   return $timeout(fn, 10, false);
                                 };
 
     var cancelAnimationFrame = $window.cancelAnimationFrame       ||
-                               $window.mozCancelAnimationFrame    ||
                                $window.webkitCancelAnimationFrame ||
                                function(timer) {
                                  return $timeout.cancel(timer);
