@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2267+sha.cceb455
+ * @license AngularJS v1.2.14-build.2268+sha.1fb47e0
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -8,7 +8,7 @@
 /* jshint maxlen: false */
 
 /**
- * @ngdoc overview
+ * @ngdoc module
  * @name ngAnimate
  * @description
  *
@@ -43,7 +43,7 @@
  *
  * Below is an example of how to apply animations to a directive that supports animation hooks:
  *
- * <pre>
+ * ```html
  * <style type="text/css">
  * .slide.ng-enter, .slide.ng-leave {
  *   -webkit-transition:0.5s linear all;
@@ -61,7 +61,7 @@
  * to trigger the CSS transition/animations
  * -->
  * <ANY class="slide" ng-include="..."></ANY>
- * </pre>
+ * ```
  *
  * Keep in mind that if an animation is running, any child elements cannot be animated until the parent element's
  * animation has completed.
@@ -73,7 +73,7 @@
  *
  * The following code below demonstrates how to perform animations using **CSS transitions** with Angular:
  *
- * <pre>
+ * ```html
  * <style type="text/css">
  * /&#42;
  *  The animate class is apart of the element and the ng-enter class
@@ -101,11 +101,11 @@
  * <div class="view-container">
  *   <div ng-view class="reveal-animation"></div>
  * </div>
- * </pre>
+ * ```
  *
  * The following code below demonstrates how to perform animations using **CSS animations** with Angular:
  *
- * <pre>
+ * ```html
  * <style type="text/css">
  * .reveal-animation.ng-enter {
  *   -webkit-animation: enter_sequence 1s linear; /&#42; Safari/Chrome &#42;/
@@ -124,7 +124,7 @@
  * <div class="view-container">
  *   <div ng-view class="reveal-animation"></div>
  * </div>
- * </pre>
+ * ```
  *
  * Both CSS3 animations and transitions can be used together and the animate service will figure out the correct duration and delay timing.
  *
@@ -142,7 +142,7 @@
  * the animation. The style property expected within the stagger class can either be a **transition-delay** or an
  * **animation-delay** property (or both if your animation contains both transitions and keyframe animations).
  *
- * <pre>
+ * ```css
  * .my-animation.ng-enter {
  *   /&#42; standard transition code &#42;/
  *   -webkit-transition: 1s linear all;
@@ -163,7 +163,7 @@
  *   /&#42; standard transition styles &#42;/
  *   opacity:1;
  * }
- * </pre>
+ * ```
  *
  * Staggering animations work by default in ngRepeat (so long as the CSS class is defined). Outside of ngRepeat, to use staggering animations
  * on your own, they can be triggered by firing multiple calls to the same event on $animate. However, the restrictions surrounding this
@@ -172,7 +172,7 @@
  *
  * The following code will issue the **ng-leave-stagger** event on the element provided:
  *
- * <pre>
+ * ```js
  * var kids = parent.children();
  *
  * $animate.leave(kids[0]); //stagger index=0
@@ -186,7 +186,7 @@
  *   $animate.leave(kids[5]); //stagger index=0
  *   $animate.leave(kids[6]); //stagger index=1
  * }, 100, false);
- * </pre>
+ * ```
  *
  * Stagger animations are currently only supported within CSS-defined animations.
  *
@@ -194,7 +194,7 @@
  * In the event that you do not want to use CSS3 transitions or CSS3 animations or if you wish to offer animations on browsers that do not
  * yet support CSS transitions/animations, then you can make use of JavaScript animations defined inside of your AngularJS module.
  *
- * <pre>
+ * ```js
  * //!annotate="YourApp" Your AngularJS Module|Replace this or ngModule with the module that you used to define your application.
  * var ngModule = angular.module('YourApp', ['ngAnimate']);
  * ngModule.animation('.my-crazy-animation', function() {
@@ -223,7 +223,7 @@
  *     removeClass: function(element, className, done) { }
  *   };
  * });
- * </pre>
+ * ```
  *
  * JavaScript-defined animations are created with a CSS-like class selector and a collection of events which are set to run
  * a javascript callback function. When an animation is triggered, $animate will look for a matching animation which fits
@@ -241,8 +241,8 @@
 angular.module('ngAnimate', ['ng'])
 
   /**
-   * @ngdoc object
-   * @name ngAnimate.$animateProvider
+   * @ngdoc provider
+   * @name $animateProvider
    * @description
    *
    * The `$animateProvider` allows developers to register JavaScript animation event handlers directly inside of a module.
@@ -373,8 +373,8 @@ angular.module('ngAnimate', ['ng'])
       }
 
       /**
-       * @ngdoc object
-       * @name ngAnimate.$animate
+       * @ngdoc service
+       * @name $animate
        * @function
        *
        * @description
@@ -393,9 +393,8 @@ angular.module('ngAnimate', ['ng'])
        */
       return {
         /**
-         * @ngdoc function
-         * @name ngAnimate.$animate#enter
-         * @methodOf ngAnimate.$animate
+         * @ngdoc method
+         * @name $animate#enter
          * @function
          *
          * @description
@@ -432,9 +431,8 @@ angular.module('ngAnimate', ['ng'])
         },
 
         /**
-         * @ngdoc function
-         * @name ngAnimate.$animate#leave
-         * @methodOf ngAnimate.$animate
+         * @ngdoc method
+         * @name $animate#leave
          * @function
          *
          * @description
@@ -471,9 +469,8 @@ angular.module('ngAnimate', ['ng'])
         },
 
         /**
-         * @ngdoc function
-         * @name ngAnimate.$animate#move
-         * @methodOf ngAnimate.$animate
+         * @ngdoc method
+         * @name $animate#move
          * @function
          *
          * @description
@@ -512,9 +509,8 @@ angular.module('ngAnimate', ['ng'])
         },
 
         /**
-         * @ngdoc function
-         * @name ngAnimate.$animate#addClass
-         * @methodOf ngAnimate.$animate
+         * @ngdoc method
+         * @name $animate#addClass
          *
          * @description
          * Triggers a custom animation event based off the className variable and then attaches the className value to the element as a CSS class.
@@ -549,9 +545,8 @@ angular.module('ngAnimate', ['ng'])
         },
 
         /**
-         * @ngdoc function
-         * @name ngAnimate.$animate#removeClass
-         * @methodOf ngAnimate.$animate
+         * @ngdoc method
+         * @name $animate#removeClass
          *
          * @description
          * Triggers a custom animation event based off the className variable and then removes the CSS class provided by the className value
@@ -608,9 +603,8 @@ angular.module('ngAnimate', ['ng'])
         },
 
         /**
-         * @ngdoc function
-         * @name ngAnimate.$animate#enabled
-         * @methodOf ngAnimate.$animate
+         * @ngdoc method
+         * @name $animate#enabled
          * @function
          *
          * @param {boolean=} value If provided then set the animation on or off.
