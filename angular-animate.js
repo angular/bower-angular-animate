@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2311+sha.f4a121f
+ * @license AngularJS v1.2.14-build.2312+sha.f296e2e
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -415,9 +415,9 @@ angular.module('ngAnimate', ['ng'])
          * | 9. The animation ends and all generated CSS classes are removed from the element             | class="my-animation"                        |
          * | 10. The doneCallback() callback is fired (if provided)                                       | class="my-animation"                        |
          *
-         * @param {jQuery/jqLite element} element the element that will be the focus of the enter animation
-         * @param {jQuery/jqLite element} parentElement the parent element of the element that will be the focus of the enter animation
-         * @param {jQuery/jqLite element} afterElement the sibling element (which is the previous element) of the element that will be the focus of the enter animation
+         * @param {DOMElement} element the element that will be the focus of the enter animation
+         * @param {DOMElement} parentElement the parent element of the element that will be the focus of the enter animation
+         * @param {DOMElement} afterElement the sibling element (which is the previous element) of the element that will be the focus of the enter animation
          * @param {function()=} doneCallback the callback function that will be called once the animation is complete
         */
         enter : function(element, parentElement, afterElement, doneCallback) {
@@ -453,7 +453,7 @@ angular.module('ngAnimate', ['ng'])
          * | 9. The element is removed from the DOM                                                       | ...                                         |
          * | 10. The doneCallback() callback is fired (if provided)                                       | ...                                         |
          *
-         * @param {jQuery/jqLite element} element the element that will be the focus of the leave animation
+         * @param {DOMElement} element the element that will be the focus of the leave animation
          * @param {function()=} doneCallback the callback function that will be called once the animation is complete
         */
         leave : function(element, doneCallback) {
@@ -492,9 +492,9 @@ angular.module('ngAnimate', ['ng'])
          * | 9. The animation ends and all generated CSS classes are removed from the element             | class="my-animation"                        |
          * | 10. The doneCallback() callback is fired (if provided)                                       | class="my-animation"                        |
          *
-         * @param {jQuery/jqLite element} element the element that will be the focus of the move animation
-         * @param {jQuery/jqLite element} parentElement the parentElement element of the element that will be the focus of the move animation
-         * @param {jQuery/jqLite element} afterElement the sibling element (which is the previous element) of the element that will be the focus of the move animation
+         * @param {DOMElement} element the element that will be the focus of the move animation
+         * @param {DOMElement} parentElement the parentElement element of the element that will be the focus of the move animation
+         * @param {DOMElement} afterElement the sibling element (which is the previous element) of the element that will be the focus of the move animation
          * @param {function()=} doneCallback the callback function that will be called once the animation is complete
         */
         move : function(element, parentElement, afterElement, doneCallback) {
@@ -532,7 +532,7 @@ angular.module('ngAnimate', ['ng'])
          * | 9. The super class is kept on the element                                                      | class="my-animation super"                  |
          * | 10. The doneCallback() callback is fired (if provided)                                         | class="my-animation super"                  |
          *
-         * @param {jQuery/jqLite element} element the element that will be animated
+         * @param {DOMElement} element the element that will be animated
          * @param {string} className the CSS class that will be added to the element and then animated
          * @param {function()=} doneCallback the callback function that will be called once the animation is complete
         */
@@ -568,7 +568,7 @@ angular.module('ngAnimate', ['ng'])
          * | 9. The doneCallback() callback is fired (if provided)                                         | class="my-animation"                        |
          *
          *
-         * @param {jQuery/jqLite element} element the element that will be animated
+         * @param {DOMElement} element the element that will be animated
          * @param {string} className the CSS class that will be animated and then removed from the element
          * @param {function()=} doneCallback the callback function that will be called once the animation is complete
         */
@@ -587,7 +587,7 @@ angular.module('ngAnimate', ['ng'])
            * @function
            * @description Adds and/or removes the given CSS classes to and from the element.
            * Once complete, the done() callback will be fired (if provided).
-           * @param {jQuery/jqLite element} element the element which will it's CSS classes changed
+           * @param {DOMElement} element the element which will it's CSS classes changed
            *   removed from it
            * @param {string} add the CSS classes which will be added to the element
            * @param {string} remove the CSS class which will be removed from the element
