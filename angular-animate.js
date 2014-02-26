@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2330+sha.e71e7b6
+ * @license AngularJS v1.2.14-build.2331+sha.f4f1f43
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -442,8 +442,7 @@ angular.module('ngAnimate', ['ng'])
           cancelChildAnimations(element);
           this.enabled(false, element);
           $rootScope.$$postDigest(function() {
-            element = stripCommentsFromElement(element);
-            performAnimation('leave', 'ng-leave', element, null, null, function() {
+            performAnimation('leave', 'ng-leave', stripCommentsFromElement(element), null, null, function() {
               $delegate.leave(element);
             }, doneCallback);
           });
