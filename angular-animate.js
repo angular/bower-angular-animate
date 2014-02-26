@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2328+sha.e988199
+ * @license AngularJS v1.2.14-build.2329+sha.c914cd9
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -948,16 +948,21 @@ angular.module('ngAnimate', ['ng'])
 
       function cancelChildAnimations(element) {
         var node = extractElementNode(element);
-        forEach(node.querySelectorAll('.' + NG_ANIMATE_CLASS_NAME), function(element) {
-          element = angular.element(element);
-          var data = element.data(NG_ANIMATE_STATE);
-          if(data && data.active) {
-            angular.forEach(data.active, function(operation) {
-              (operation.done || noop)(true);
-              cancelAnimations(operation.animations);
-            });
-          }
-        });
+        if (node) {
+          var nodes = angular.isFunction(node.getElementsByClassName) ?
+            node.getElementsByClassName(NG_ANIMATE_CLASS_NAME) :
+            node.querySelectorAll('.' + NG_ANIMATE_CLASS_NAME);
+          forEach(nodes, function(element) {
+            element = angular.element(element);
+            var data = element.data(NG_ANIMATE_STATE);
+            if(data && data.active) {
+              angular.forEach(data.active, function(operation) {
+                (operation.done || noop)(true);
+                cancelAnimations(operation.animations);
+              });
+            }
+          });
+        }
       }
 
       function cancelAnimations(animations) {
