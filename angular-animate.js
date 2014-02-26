@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2329+sha.c914cd9
+ * @license AngularJS v1.2.14-build.2330+sha.e71e7b6
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1258,7 +1258,14 @@ angular.module('ngAnimate', ['ng'])
         if(transitionDuration > 0) {
           blockTransitions(element, className, isCurrentlyAnimating);
         }
-        if(animationDuration > 0) {
+
+        //staggering keyframe animations work by adjusting the `animation-delay` CSS property
+        //on the given element, however, the delay value can only calculated after the reflow
+        //since by that time $animate knows how many elements are being animated. Therefore,
+        //until the reflow occurs the element needs to be blocked (where the keyframe animation
+        //is set to `none 0s`). This blocking mechanism should only be set for when a stagger
+        //animation is detected and when the element item index is greater than 0.
+        if(animationDuration > 0 && stagger.animationDelay > 0 && stagger.animationDuration === 0) {
           blockKeyframeAnimations(element);
         }
 
