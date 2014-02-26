@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2325+sha.3d6dff4
+ * @license AngularJS v1.2.14-build.2326+sha.332e935
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -573,7 +573,7 @@ angular.module('ngAnimate', ['ng'])
            *   removed from it
            * @param {string} add the CSS classes which will be added to the element
            * @param {string} remove the CSS class which will be removed from the element
-           * @param {function=} done the callback function (if provided) that will be fired after the
+           * @param {Function=} done the callback function (if provided) that will be fired after the
            *   CSS classes have been set on the element
            */
         setClass : function(element, add, remove, doneCallback) {
@@ -589,7 +589,7 @@ angular.module('ngAnimate', ['ng'])
          * @function
          *
          * @param {boolean=} value If provided then set the animation on or off.
-         * @param {jQuery/jqLite element=} element If provided then the element will be used to represent the enable/disable operation
+         * @param {DOMElement=} element If provided then the element will be used to represent the enable/disable operation
          * @return {boolean} Current animation state.
          *
          * @description
