@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2337+sha.214c65d
+ * @license AngularJS v1.2.14-build.2338+sha.27873ac
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -910,7 +910,7 @@ angular.module('ngAnimate', ['ng'])
           }
         }
 
-        //it is less complicated to use a flag than managing and cancelling
+        //it is less complicated to use a flag than managing and canceling
         //timeouts containing multiple callbacks.
         function fireDOMOperation() {
           if(!fireDOMOperation.hasBeenRun) {
