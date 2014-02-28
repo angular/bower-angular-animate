@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.14-build.2342+sha.8794a17
+ * @license AngularJS v1.2.14-build.2343+sha.3344396
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -37,6 +37,8 @@
  * | {@link ng.directive:ngIf#usage_animations ngIf}                 | enter and leave                                    |
  * | {@link ng.directive:ngClass#usage_animations ngClass}           | add and remove                                     |
  * | {@link ng.directive:ngShow#usage_animations ngShow & ngHide}    | add and remove (the ng-hide class value)           |
+ * | {@link ng.directive:form#usage_animations form}                 | add and remove (dirty, pristine, valid, invalid & all other validations)                |
+ * | {@link ng.directive:ngModel#usage_animations ngModel}           | add and remove (dirty, pristine, valid, invalid & all other validations)                |
  *
  * You can find out more information about animations upon visiting each directive page.
  *
