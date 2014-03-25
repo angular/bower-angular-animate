@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.2497+sha.3f609f9
+ * @license AngularJS v1.3.0-build.2498+sha.ccba305
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -112,11 +112,11 @@
  *   -webkit-animation: enter_sequence 1s linear; /&#42; Safari/Chrome &#42;/
  *   animation: enter_sequence 1s linear; /&#42; IE10+ and Future Browsers &#42;/
  * }
- * &#64-webkit-keyframes enter_sequence {
+ * @-webkit-keyframes enter_sequence {
  *   from { opacity:0; }
  *   to { opacity:1; }
  * }
- * &#64keyframes enter_sequence {
+ * @keyframes enter_sequence {
  *   from { opacity:0; }
  *   to { opacity:1; }
  * }
