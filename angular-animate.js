@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.16-build.46+sha.9091b77
+ * @license AngularJS v1.3.0-build.2516+sha.2317af6
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -338,9 +338,12 @@ angular.module('ngAnimate', ['ng'])
           //operation which performs CSS transition and keyframe
           //animations sniffing. This is always included for each
           //element animation procedure if the browser supports
-          //transitions and/or keyframe animations
+          //transitions and/or keyframe animations. The default
+          //animation is added to the top of the list to prevent
+          //any previous animations from affecting the element styling
+          //prior to the element being animated.
           if ($sniffer.transitions || $sniffer.animations) {
-            classes.push('');
+            matches.push($injector.get(selectors['']));
           }
 
           for(var i=0; i < classes.length; i++) {
