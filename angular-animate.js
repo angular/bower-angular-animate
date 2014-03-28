@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.2532+sha.f552f25
+ * @license AngularJS v1.3.0-build.2533+sha.ff5cf73
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1205,7 +1205,7 @@ angular.module('ngAnimate', ['ng'])
 
         //but it may not need to cancel out the existing timeout
         //if the timestamp is less than the previous one
-        var futureTimestamp = Date.now() + (totalTime * 1000);
+        var futureTimestamp = Date.now() + totalTime;
         if(futureTimestamp <= closingTimestamp) {
           return;
         }
