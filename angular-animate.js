@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.17-build.203+sha.093e76f
+ * @license AngularJS v1.2.17-build.204+sha.ad08638
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1374,7 +1374,7 @@ angular.module('ngAnimate', ['ng'])
           //the jqLite object, so we're safe to use a single variable to house
           //the styles since there is always only one element being animated
           var oldStyle = node.getAttribute('style') || '';
-          node.setAttribute('style', oldStyle + ' ' + style);
+          node.setAttribute('style', oldStyle + '; ' + style);
         }
 
         element.on(css3AnimationEvents, onAnimationProgress);
