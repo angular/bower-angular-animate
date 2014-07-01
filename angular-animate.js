@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.2864+sha.ca75279
+ * @license AngularJS v1.3.0-build.2865+sha.e18db78
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -981,10 +981,9 @@ angular.module('ngAnimate', ['ng'])
               //cancel all animations when a structural animation takes place
               for(var klass in runningAnimations) {
                 animationsToCancel.push(runningAnimations[klass]);
-                cleanup(element, klass);
               }
-              runningAnimations = {};
-              totalActiveAnimations = 0;
+              ngAnimateState = {};
+              cleanup(element, true);
             }
           } else if(lastAnimation.event == 'setClass') {
             animationsToCancel.push(lastAnimation);
@@ -1006,6 +1005,9 @@ angular.module('ngAnimate', ['ng'])
             });
           }
         }
+
+        runningAnimations     = ngAnimateState.active || {};
+        totalActiveAnimations = ngAnimateState.totalActive || 0;
 
         if(runner.isClassBased && !runner.isSetClassOperation && !skipAnimation) {
           skipAnimation = (animationEvent == 'addClass') == element.hasClass(className); //opposite of XOR
