@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.2866+sha.b0ca519
+ * @license AngularJS v1.3.0-build.2867+sha.f07af61
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1316,7 +1316,9 @@ angular.module('ngAnimate', ['ng'])
         forEach(elements, function(element) {
           var elementData = element.data(NG_ANIMATE_CSS_DATA_KEY);
           if(elementData) {
-            (elementData.closeAnimationFn || noop)();
+            forEach(elementData.closeAnimationFns, function(fn) {
+              fn();
+            });
           }
         });
       }
@@ -1437,6 +1439,7 @@ angular.module('ngAnimate', ['ng'])
                              stagger.animationDelay > 0 &&
                              stagger.animationDuration === 0;
 
+        var closeAnimationFns = formerData.closeAnimationFns || [];
         element.data(NG_ANIMATE_CSS_DATA_KEY, {
           stagger : stagger,
           cacheKey : eventCacheKey,
@@ -1444,7 +1447,7 @@ angular.module('ngAnimate', ['ng'])
           itemIndex : itemIndex,
           blockTransition : blockTransition,
           blockAnimation : blockAnimation,
-          closeAnimationFn : noop
+          closeAnimationFns : closeAnimationFns
         });
 
         var node = extractElementNode(element);
@@ -1536,10 +1539,10 @@ angular.module('ngAnimate', ['ng'])
         var css3AnimationEvents = ANIMATIONEND_EVENT + ' ' + TRANSITIONEND_EVENT;
 
         element.on(css3AnimationEvents, onAnimationProgress);
-        elementData.closeAnimationFn = function() {
+        elementData.closeAnimationFns.push(function() {
           onEnd();
           activeAnimationComplete();
-        };
+        });
 
         var staggerTime       = itemIndex * (Math.max(stagger.animationDelay, stagger.transitionDelay) || 0);
         var animationTime     = (maxDelay + maxDuration) * CLOSING_TIME_BUFFER;
