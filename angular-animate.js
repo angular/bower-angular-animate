@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.3111+sha.d0b4189
+ * @license AngularJS v1.3.0-build.3112+sha.2f4437b
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -372,6 +372,7 @@ angular.module('ngAnimate', ['ng'])
     var noop = angular.noop;
     var forEach = angular.forEach;
     var selectors = $animateProvider.$$selectors;
+    var isArray = angular.isArray;
 
     var ELEMENT_NODE = 1;
     var NG_ANIMATE_STATE = '$$ngAnimateState';
@@ -425,10 +426,14 @@ angular.module('ngAnimate', ['ng'])
                 return classNameFilter.test(className);
               };
 
-      function blockElementAnimations(element) {
+      function classBasedAnimationsBlocked(element, setter) {
         var data = element.data(NG_ANIMATE_STATE) || {};
-        data.running = true;
-        element.data(NG_ANIMATE_STATE, data);
+        if (setter) {
+          data.running = true;
+          data.structural = true;
+          element.data(NG_ANIMATE_STATE, data);
+        }
+        return data.disabled || (data.running && data.structural);
       }
 
       function runAnimationPostDigest(fn) {
@@ -439,6 +444,60 @@ angular.module('ngAnimate', ['ng'])
         return function() {
           cancelFn && cancelFn();
         };
+      }
+
+      function resolveElementClasses(element, cache, runningAnimations) {
+        runningAnimations = runningAnimations || {};
+        var map = {};
+
+        forEach(cache.add, function(className) {
+          if (className && className.length) {
+            map[className] = map[className] || 0;
+            map[className]++;
+          }
+        });
+
+        forEach(cache.remove, function(className) {
+          if (className && className.length) {
+            map[className] = map[className] || 0;
+            map[className]--;
+          }
+        });
+
+        var lookup = [];
+        forEach(runningAnimations, function(data, selector) {
+          forEach(selector.split(' '), function(s) {
+            lookup[s]=data;
+          });
+        });
+
+        var toAdd = [], toRemove = [];
+        forEach(map, function(status, className) {
+          var hasClass = element.hasClass(className);
+          var matchingAnimation = lookup[className] || {};
+
+          // When addClass and removeClass is called then $animate will check to
+          // see if addClass and removeClass cancel each other out. When there are
+          // more calls to removeClass than addClass then the count falls below 0
+          // and then the removeClass animation will be allowed. Otherwise if the
+          // count is above 0 then that means an addClass animation will commence.
+          // Once an animation is allowed then the code will also check to see if
+          // there exists any on-going animation that is already adding or remvoing
+          // the matching CSS class.
+          if (status < 0) {
+            //does it have the class or will it have the class
+            if(hasClass || matchingAnimation.event == 'addClass') {
+              toRemove.push(className);
+            }
+          } else if (status > 0) {
+            //is the class missing or will it be removed?
+            if(!hasClass || matchingAnimation.event == 'removeClass') {
+              toAdd.push(className);
+            }
+          }
+        });
+
+        return (toAdd.length + toRemove.length) > 0 && [toAdd.join(' '), toRemove.join(' ')];
       }
 
       function lookup(name) {
@@ -479,17 +538,26 @@ angular.module('ngAnimate', ['ng'])
           return;
         }
 
+        var classNameAdd;
+        var classNameRemove;
+        if (isArray(className)) {
+          classNameAdd = className[0];
+          classNameRemove = className[1];
+          if (!classNameAdd) {
+            className = classNameRemove;
+            animationEvent = 'removeClass';
+          } else if(!classNameRemove) {
+            className = classNameAdd;
+            animationEvent = 'addClass';
+          } else {
+            className = classNameAdd + ' ' + classNameRemove;
+          }
+        }
+
         var isSetClassOperation = animationEvent == 'setClass';
         var isClassBased = isSetClassOperation ||
                            animationEvent == 'addClass' ||
                            animationEvent == 'removeClass';
-
-        var classNameAdd, classNameRemove;
-        if (angular.isArray(className)) {
-          classNameAdd = className[0];
-          classNameRemove = className[1];
-          className = classNameAdd + ' ' + classNameRemove;
-        }
 
         var currentClassName = element.attr('class');
         var classes = currentClassName + ' ' + className;
@@ -671,7 +739,7 @@ angular.module('ngAnimate', ['ng'])
           parentElement = prepareElement(parentElement);
           afterElement = prepareElement(afterElement);
 
-          blockElementAnimations(element);
+          classBasedAnimationsBlocked(element, true);
           $delegate.enter(element, parentElement, afterElement);
           return runAnimationPostDigest(function() {
             return performAnimation('enter', 'ng-enter', stripCommentsFromElement(element), parentElement, afterElement, noop, doneCallback);
@@ -713,7 +781,7 @@ angular.module('ngAnimate', ['ng'])
           element = angular.element(element);
 
           cancelChildAnimations(element);
-          blockElementAnimations(element);
+          classBasedAnimationsBlocked(element, true);
           this.enabled(false, element);
           return runAnimationPostDigest(function() {
             return performAnimation('leave', 'ng-leave', stripCommentsFromElement(element), null, null, function() {
@@ -762,7 +830,7 @@ angular.module('ngAnimate', ['ng'])
           afterElement = prepareElement(afterElement);
 
           cancelChildAnimations(element);
-          blockElementAnimations(element);
+          classBasedAnimationsBlocked(element, true);
           $delegate.move(element, parentElement, afterElement);
           return runAnimationPostDigest(function() {
             return performAnimation('move', 'ng-move', stripCommentsFromElement(element), parentElement, afterElement, noop, doneCallback);
@@ -800,11 +868,7 @@ angular.module('ngAnimate', ['ng'])
          * @return {function} the animation cancellation function
         */
         addClass : function(element, className, doneCallback) {
-          element = angular.element(element);
-          element = stripCommentsFromElement(element);
-          return performAnimation('addClass', className, element, null, null, function() {
-            $delegate.addClass(element, className);
-          }, doneCallback);
+          return this.setClass(element, className, [], doneCallback);
         },
 
         /**
@@ -838,11 +902,7 @@ angular.module('ngAnimate', ['ng'])
          * @return {function} the animation cancellation function
         */
         removeClass : function(element, className, doneCallback) {
-          element = angular.element(element);
-          element = stripCommentsFromElement(element);
-          return performAnimation('removeClass', className, element, null, null, function() {
-            $delegate.removeClass(element, className);
-          }, doneCallback);
+          return this.setClass(element, [], className, doneCallback);
         },
 
         /**
@@ -874,11 +934,54 @@ angular.module('ngAnimate', ['ng'])
          * @return {function} the animation cancellation function
          */
         setClass : function(element, add, remove, doneCallback) {
+          var STORAGE_KEY = '$$animateClasses';
           element = angular.element(element);
           element = stripCommentsFromElement(element);
-          return performAnimation('setClass', [add, remove], element, null, null, function() {
-            $delegate.setClass(element, add, remove);
-          }, doneCallback);
+
+          if (classBasedAnimationsBlocked(element)) {
+            return $delegate.setClass(element, add, remove, doneCallback);
+          }
+
+          add = isArray(add) ? add : add.split(' ');
+          remove = isArray(remove) ? remove : remove.split(' ');
+          doneCallback = doneCallback || noop;
+
+          var cache = element.data(STORAGE_KEY);
+          if (cache) {
+            cache.callbacks.push(doneCallback);
+            cache.add = cache.add.concat(add);
+            cache.remove = cache.remove.concat(remove);
+
+            //the digest cycle will combine all the animations into one function
+            return;
+          } else {
+            element.data(STORAGE_KEY, cache = {
+              callbacks : [doneCallback],
+              add : add,
+              remove : remove
+            });
+          }
+
+          return runAnimationPostDigest(function() {
+            var cache = element.data(STORAGE_KEY);
+            var callbacks = cache.callbacks;
+
+            element.removeData(STORAGE_KEY);
+
+            var state = element.data(NG_ANIMATE_STATE) || {};
+            var classes = resolveElementClasses(element, cache, state.active);
+            return !classes
+              ? $$asyncCallback(onComplete)
+              : performAnimation('setClass', classes, element, null, null, function() {
+                  $delegate.setClass(element, classes[0], classes[1]);
+                }, onComplete);
+
+            function onComplete() {
+              forEach(callbacks, function(fn) {
+                fn();
+              });
+            }
+          });
         },
 
         /**
@@ -937,6 +1040,7 @@ angular.module('ngAnimate', ['ng'])
           return noopCancel;
         }
 
+        animationEvent = runner.event;
         className = runner.className;
         var elementEvents = angular.element._data(runner.node);
         elementEvents = elementEvents && elementEvents.events;
@@ -945,25 +1049,11 @@ angular.module('ngAnimate', ['ng'])
           parentElement = afterElement ? afterElement.parent() : element.parent();
         }
 
-        var ngAnimateState  = element.data(NG_ANIMATE_STATE) || {};
-        var runningAnimations     = ngAnimateState.active || {};
-        var totalActiveAnimations = ngAnimateState.totalActive || 0;
-        var lastAnimation         = ngAnimateState.last;
-
-        //only allow animations if the currently running animation is not structural
-        //or if there is no animation running at all
-        var skipAnimations;
-        if (runner.isClassBased) {
-          skipAnimations = ngAnimateState.running ||
-                           ngAnimateState.disabled ||
-                           (lastAnimation && !lastAnimation.isClassBased);
-        }
-
         //skip the animation if animations are disabled, a parent is already being animated,
         //the element is not currently attached to the document body or then completely close
         //the animation if any matching animations are not found at all.
         //NOTE: IE8 + IE9 should close properly (run closeAnimation()) in case an animation was found.
-        if (skipAnimations || animationsDisabled(element, parentElement)) {
+        if (animationsDisabled(element, parentElement)) {
           fireDOMOperation();
           fireBeforeCallbackAsync();
           fireAfterCallbackAsync();
@@ -971,6 +1061,10 @@ angular.module('ngAnimate', ['ng'])
           return noopCancel;
         }
 
+        var ngAnimateState  = element.data(NG_ANIMATE_STATE) || {};
+        var runningAnimations     = ngAnimateState.active || {};
+        var totalActiveAnimations = ngAnimateState.totalActive || 0;
+        var lastAnimation         = ngAnimateState.last;
         var skipAnimation = false;
         if (totalActiveAnimations > 0) {
           var animationsToCancel = [];
@@ -1006,9 +1100,6 @@ angular.module('ngAnimate', ['ng'])
           }
         }
 
-        runningAnimations     = ngAnimateState.active || {};
-        totalActiveAnimations = ngAnimateState.totalActive || 0;
-
         if (runner.isClassBased && !runner.isSetClassOperation && !skipAnimation) {
           skipAnimation = (animationEvent == 'addClass') == element.hasClass(className); //opposite of XOR
         }
@@ -1020,6 +1111,9 @@ angular.module('ngAnimate', ['ng'])
           fireDoneCallbackAsync();
           return noopCancel;
         }
+
+        runningAnimations     = ngAnimateState.active || {};
+        totalActiveAnimations = ngAnimateState.totalActive || 0;
 
         if (animationEvent == 'leave') {
           //there's no need to ever remove the listener since the element
@@ -1714,7 +1808,7 @@ angular.module('ngAnimate', ['ng'])
 
       function suffixClasses(classes, suffix) {
         var className = '';
-        classes = angular.isArray(classes) ? classes : classes.split(/\s+/);
+        classes = isArray(classes) ? classes : classes.split(/\s+/);
         forEach(classes, function(klass, i) {
           if (klass && klass.length > 0) {
             className += (i > 0 ? ' ' : '') + klass + suffix;
