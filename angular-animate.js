@@ -477,19 +477,21 @@ angular.module('ngAnimate', ['ng'])
         runningAnimations = runningAnimations || {};
         var map = {};
 
-        forEach(cache.add, function(className) {
-          if (className && className.length) {
-            map[className] = map[className] || 0;
-            map[className]++;
-          }
-        });
+        if (cache) {
+        	forEach(cache.add, function(className) {
+	          if (className && className.length) {
+	            map[className] = map[className] || 0;
+	            map[className]++;
+	          }
+	        });
 
-        forEach(cache.remove, function(className) {
-          if (className && className.length) {
-            map[className] = map[className] || 0;
-            map[className]--;
-          }
-        });
+	        forEach(cache.remove, function(className) {
+	          if (className && className.length) {
+	            map[className] = map[className] || 0;
+	            map[className]--;
+	          }
+	        });
+        }
 
         var lookup = [];
         forEach(runningAnimations, function(data, selector) {
