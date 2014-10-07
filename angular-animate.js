@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.3357+sha.a75546a
+ * @license AngularJS v1.3.0-build.3358+sha.cb85cbc
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1425,6 +1425,16 @@ angular.module('ngAnimate', ['ng'])
       var parentCounter = 0;
       var animationReflowQueue = [];
       var cancelAnimationReflow;
+      function clearCacheAfterReflow() {
+        if (!cancelAnimationReflow) {
+          cancelAnimationReflow = $$animateReflow(function() {
+            animationReflowQueue = [];
+            cancelAnimationReflow = null;
+            lookupCache = {};
+          });
+        }
+      }
+
       function afterReflow(element, callback) {
         if (cancelAnimationReflow) {
           cancelAnimationReflow();
@@ -1770,6 +1780,7 @@ angular.module('ngAnimate', ['ng'])
         //to perform at all
         var preReflowCancellation = animateBefore(animationEvent, element, className);
         if (!preReflowCancellation) {
+          clearCacheAfterReflow();
           animationComplete();
           return;
         }
@@ -1826,6 +1837,7 @@ angular.module('ngAnimate', ['ng'])
             afterReflow(element, animationCompleted);
             return cancellationMethod;
           }
+          clearCacheAfterReflow();
           animationCompleted();
         },
 
@@ -1835,6 +1847,7 @@ angular.module('ngAnimate', ['ng'])
             afterReflow(element, animationCompleted);
             return cancellationMethod;
           }
+          clearCacheAfterReflow();
           animationCompleted();
         },
 
@@ -1844,6 +1857,7 @@ angular.module('ngAnimate', ['ng'])
             afterReflow(element, animationCompleted);
             return cancellationMethod;
           }
+          clearCacheAfterReflow();
           animationCompleted();
         },
 
