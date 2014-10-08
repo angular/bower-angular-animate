@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.3362+sha.6fd36de
+ * @license AngularJS v1.3.0-build.3365+sha.74a214c
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -475,23 +475,8 @@ angular.module('ngAnimate', ['ng'])
 
       function resolveElementClasses(element, cache, runningAnimations) {
         runningAnimations = runningAnimations || {};
-        var map = {};
 
-        forEach(cache.add, function(className) {
-          if (className && className.length) {
-            map[className] = map[className] || 0;
-            map[className]++;
-          }
-        });
-
-        forEach(cache.remove, function(className) {
-          if (className && className.length) {
-            map[className] = map[className] || 0;
-            map[className]--;
-          }
-        });
-
-        var lookup = [];
+        var lookup = {};
         forEach(runningAnimations, function(data, selector) {
           forEach(selector.split(' '), function(s) {
             lookup[s]=data;
@@ -499,7 +484,7 @@ angular.module('ngAnimate', ['ng'])
         });
 
         var toAdd = [], toRemove = [];
-        forEach(map, function(status, className) {
+        forEach(cache.classes, function(status, className) {
           var hasClass = angular.$$hasClass(element[0], className);
           var matchingAnimation = lookup[className] || {};
 
@@ -511,12 +496,12 @@ angular.module('ngAnimate', ['ng'])
           // Once an animation is allowed then the code will also check to see if
           // there exists any on-going animation that is already adding or remvoing
           // the matching CSS class.
-          if (status < 0) {
+          if (status === false) {
             //does it have the class or will it have the class
             if (hasClass || matchingAnimation.event == 'addClass') {
               toRemove.push(className);
             }
-          } else if (status > 0) {
+          } else if (status === true) {
             //is the class missing or will it be removed?
             if (!hasClass || matchingAnimation.event == 'removeClass') {
               toAdd.push(className);
@@ -1003,20 +988,36 @@ angular.module('ngAnimate', ['ng'])
             return $delegate.setClass(element, add, remove);
           }
 
+          // we're using a combined array for both the add and remove
+          // operations since the ORDER OF addClass and removeClass matters
+          var classes, cache = element.data(STORAGE_KEY);
+          var hasCache = !!cache;
+          if (!cache) {
+            cache = {};
+            cache.classes = {};
+          }
+          classes = cache.classes;
+
           add = isArray(add) ? add : add.split(' ');
+          forEach(add, function(c) {
+            if (c && c.length) {
+              classes[c] = true;
+            }
+          });
+
           remove = isArray(remove) ? remove : remove.split(' ');
+          forEach(remove, function(c) {
+            if (c && c.length) {
+              classes[c] = false;
+            }
+          });
 
-          var cache = element.data(STORAGE_KEY);
-          if (cache) {
-            cache.add = cache.add.concat(add);
-            cache.remove = cache.remove.concat(remove);
-
+          if (hasCache) {
             //the digest cycle will combine all the animations into one function
             return cache.promise;
           } else {
             element.data(STORAGE_KEY, cache = {
-              add : add,
-              remove : remove
+              classes : classes
             });
           }
 
