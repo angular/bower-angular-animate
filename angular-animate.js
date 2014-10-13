@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.3418+sha.4a85512
+ * @license AngularJS v1.3.0-build.3419+sha.520db0c
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1759,7 +1759,7 @@ angular.module('ngAnimate', ['ng'])
         // This will automatically be called by $animate so
         // there is no need to attach this internally to the
         // timeout done method.
-        function onEnd(cancelled) {
+        function onEnd() {
           element.off(css3AnimationEvents, onAnimationProgress);
           element.removeClass(activeClassName);
           element.removeClass(pendingClassName);
