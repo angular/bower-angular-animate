@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.0-build.3415+sha.1efaf3d
+ * @license AngularJS v1.3.0-build.3416+sha.b747d3b
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1003,10 +1003,7 @@ angular.module('ngAnimate', ['ng'])
           element = stripCommentsFromElement(element);
 
           if (classBasedAnimationsBlocked(element)) {
-            // TODO(@caitp/@matsko): Don't use private/undocumented API here --- we should not be
-            // changing the DOM synchronously in this case. The `true` parameter must eventually be
-            // removed.
-            return $delegate.setClass(element, add, remove, true);
+            return $delegate.$$setClassImmediately(element, add, remove);
           }
 
           // we're using a combined array for both the add and remove
