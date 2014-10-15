@@ -8,7 +8,7 @@ Please file issues and pull requests against that repo.
 
 You can install this package either with `npm` or with `bower`.
 
-# npm
+### npm
 
 ```shell
 npm install angular-animate
@@ -29,7 +29,7 @@ angular.module('myApp', ['ngAnimate']);
 Note that this package is not in CommonJS format, so doing `require('angular-animate')` will
 return `undefined`.
 
-# bower
+### bower
 
 ```shell
 bower install angular-animate
