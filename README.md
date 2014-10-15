@@ -11,7 +11,7 @@ You can install this package either with `npm` or with `bower`.
 # npm
 
 ```shell
-npm install angular
+npm install angular-animate
 ```
 
 Add a `<script>` to your `index.html`:
