@@ -1,9 +1,9 @@
 {
   "name": "angular-animate",
-  "version": "1.3.6-build.3649+sha.96c61fe",
+  "version": "1.3.6-build.3650+sha.a75537d",
   "main": "./angular-animate.js",
   "ignore": [],
   "dependencies": {
-    "angular": "1.3.6-build.3649+sha.96c61fe"
+    "angular": "1.3.6-build.3650+sha.a75537d"
   }
 }
