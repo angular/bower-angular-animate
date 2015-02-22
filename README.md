@@ -14,20 +14,11 @@ You can install this package either with `npm` or with `bower`.
 npm install angular-animate
 ```
 
-Add a `<script>` to your `index.html`:
-
-```html
-<script src="/node_modules/angular-animate/angular-animate.js"></script>
-```
-
 Then add `ngAnimate` as a dependency for your app:
 
 ```javascript
-angular.module('myApp', ['ngAnimate']);
+angular.module('myApp', [require('angular-animate')]);
 ```
-
-Note that this package is not in CommonJS format, so doing `require('angular-animate')` will
-return `undefined`.
 
 ### bower
 
