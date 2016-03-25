@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.5.3-build.4698+sha.3cd00fa
+ * @license AngularJS v1.5.3
  * (c) 2010-2016 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -809,7 +809,7 @@ function parseMaxTime(str) {
   forEach(values, function(value) {
     // it's always safe to consider only second values and omit `ms` values since
     // getComputedStyle will always handle the conversion for us
-    if (value.charAt(value.length - 1) === 's') {
+    if (value.charAt(value.length - 1) == 's') {
       value = value.substring(0, value.length - 1);
     }
     value = parseFloat(value) || 0;
@@ -1130,7 +1130,7 @@ var $AnimateCssProvider = ['$animateProvider', function($animateProvider) {
       var flags = {};
       flags.hasTransitions          = timings.transitionDuration > 0;
       flags.hasAnimations           = timings.animationDuration > 0;
-      flags.hasTransitionAll        = flags.hasTransitions && timings.transitionProperty === 'all';
+      flags.hasTransitionAll        = flags.hasTransitions && timings.transitionProperty == 'all';
       flags.applyTransitionDuration = hasToStyles && (
                                         (flags.hasTransitions && !flags.hasTransitionAll)
                                          || (flags.hasAnimations && !flags.hasTransitions));
@@ -1843,7 +1843,7 @@ var $$AnimateJsProvider = ['$animateProvider', function($animateProvider) {
       var before, after;
       if (animations.length) {
         var afterFn, beforeFn;
-        if (event === 'leave') {
+        if (event == 'leave') {
           beforeFn = 'leave';
           afterFn = 'afterLeave'; // TODO(matsko): get rid of this
         } else {
@@ -2205,7 +2205,7 @@ var $$AnimateQueueProvider = ['$animateProvider', function($animateProvider) {
   rules.skip.push(function(element, newAnimation, currentAnimation) {
     // why should we trigger a new structural animation if the element will
     // be removed from the DOM anyway?
-    return currentAnimation.event === 'leave' && newAnimation.structural;
+    return currentAnimation.event == 'leave' && newAnimation.structural;
   });
 
   rules.skip.push(function(element, newAnimation, currentAnimation) {
@@ -2497,7 +2497,7 @@ var $$AnimateQueueProvider = ['$animateProvider', function($animateProvider) {
 
       // there is no point in traversing the same collection of parent ancestors if a followup
       // animation will be run on the same element that already did all that checking work
-      if (!skipAnimations && (!hasExistingAnimation || existingAnimation.state !== PRE_DIGEST_STATE)) {
+      if (!skipAnimations && (!hasExistingAnimation || existingAnimation.state != PRE_DIGEST_STATE)) {
         skipAnimations = !areAnimationsAllowed(element, parent, event);
       }
 
@@ -3902,7 +3902,7 @@ var ngAnimateSwapDirective = ['$animate', '$rootScope', function($animate, $root
            deps="angular-animate.js;angular-route.js"
            animations="true">
     <file name="index.html">
-      <a href="#!/">Home</a>
+      <a href="#/">Home</a>
       <hr />
       <div class="view-container">
         <div ng-view class="view"></div>
@@ -3949,7 +3949,7 @@ var ngAnimateSwapDirective = ['$animate', '$rootScope', function($animate, $root
       <h2>Welcome to the home page</h1>
       <p>Please click on an element</p>
       <a class="record"
-         ng-href="#!/profile/{{ record.id }}"
+         ng-href="#/profile/{{ record.id }}"
          ng-animate-ref="{{ record.id }}"
          ng-repeat="record in records">
         {{ record.title }}
