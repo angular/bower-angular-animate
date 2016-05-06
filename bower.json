@@ -1,10 +1,10 @@
 {
   "name": "angular-animate",
-  "version": "1.5.6-build.4785+sha.707664a",
+  "version": "1.5.6-build.4786+sha.aaa069a",
   "license": "MIT",
   "main": "./angular-animate.js",
   "ignore": [],
   "dependencies": {
-    "angular": "1.5.6-build.4785+sha.707664a"
+    "angular": "1.5.6-build.4786+sha.aaa069a"
   }
 }
