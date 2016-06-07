@@ -11,7 +11,7 @@ var copy        = angular.copy;
 var extend      = angular.extend;
 var jqLite      = angular.element;
 var forEach     = angular.forEach;
-var isArray     = angular.isArray;
+var isArray     = Array.isArray;
 var isString    = angular.isString;
 var isObject    = angular.isObject;
 var isUndefined = angular.isUndefined;
@@ -20,7 +20,6 @@ var isFunction  = angular.isFunction;
 var isElement   = angular.isElement;
 
 var ELEMENT_NODE = 1;
-var COMMENT_NODE = 8;
 
 var ADD_CLASS_SUFFIX = '-add';
 var REMOVE_CLASS_SUFFIX = '-remove';
@@ -28,7 +27,7 @@ var EVENT_CLASS_PREFIX = 'ng-';
 var ACTIVE_CLASS_SUFFIX = '-active';
 var PREPARE_CLASS_SUFFIX = '-prepare';
 
-var NG_ANIMATE_CLASSNAME = 'ng-animate';
+var NG_ANIMATE_CLASS_NAME = 'ng-animate';
 var NG_ANIMATE_CHILDREN_DATA = '$$ngAnimateChildren';
 
 // Detect proper transitionend/animationend event names.
@@ -44,7 +43,6 @@ var CSS_PREFIX = '', TRANSITION_PROP, TRANSITIONEND_EVENT, ANIMATION_PROP, ANIMA
 // therefore there is no reason to test anymore for other vendor prefixes:
 // http://caniuse.com/#search=transition
 if (isUndefined(window.ontransitionend) && isDefined(window.onwebkittransitionend)) {
-  CSS_PREFIX = '-webkit-';
   TRANSITION_PROP = 'WebkitTransition';
   TRANSITIONEND_EVENT = 'webkitTransitionEnd transitionend';
 } else {
@@ -53,7 +51,6 @@ if (isUndefined(window.ontransitionend) && isDefined(window.onwebkittransitionen
 }
 
 if (isUndefined(window.onanimationend) && isDefined(window.onwebkitanimationend)) {
-  CSS_PREFIX = '-webkit-';
   ANIMATION_PROP = 'WebkitAnimation';
   ANIMATIONEND_EVENT = 'webkitAnimationEnd animationend';
 } else {
@@ -66,7 +63,7 @@ var PROPERTY_KEY = 'Property';
 var DELAY_KEY = 'Delay';
 var TIMING_KEY = 'TimingFunction';
 var ANIMATION_ITERATION_COUNT_KEY = 'IterationCount';
-var ANIMATION_PLAYSTATE_KEY = 'PlayState';
+var ANIMATION_PLAY_STATE_KEY = 'PlayState';
 var SAFE_FAST_FORWARD_DURATION_VALUE = 9999;
 
 var ANIMATION_DELAY_PROP = ANIMATION_PROP + DELAY_KEY;
@@ -88,8 +85,8 @@ function assertArg(arg, name, reason) {
 
 function mergeClasses(a,b) {
   if (!a && !b) return '';
-  if (!a) return b;
-  if (!b) return a;
+  if (!a) return isArray(b) ? b.join(' '): b;
+  if (!b) return isArray(a) ? a.join(' '): a;
   if (isArray(a)) a = a.join(' ');
   if (isArray(b)) b = b.join(' ');
   return a + ' ' + b;
@@ -365,7 +362,7 @@ function blockTransitions(node, duration) {
 
 function blockKeyframeAnimations(node, applyBlock) {
   var value = applyBlock ? 'paused' : '';
-  var key = ANIMATION_PROP + ANIMATION_PLAYSTATE_KEY;
+  var key = ANIMATION_PROP + ANIMATION_PLAY_STATE_KEY;
   applyInlineStyle(node, [key, value]);
   return [key, value];
 }
@@ -3226,7 +3223,7 @@ var $$AnimationProvider = ['$animateProvider', function($animateProvider) {
       }
 
       function beforeStart() {
-        element.addClass(NG_ANIMATE_CLASSNAME);
+        element.addClass(NG_ANIMATE_CLASS_NAME);
         if (tempClasses) {
           $$jqLite.addClass(element, tempClasses);
         }
@@ -3269,7 +3266,7 @@ var $$AnimationProvider = ['$animateProvider', function($animateProvider) {
           $$jqLite.removeClass(element, tempClasses);
         }
 
-        element.removeClass(NG_ANIMATE_CLASSNAME);
+        element.removeClass(NG_ANIMATE_CLASS_NAME);
         runner.complete(!rejected);
       }
     };
