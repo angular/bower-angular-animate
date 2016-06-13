@@ -1,6 +1,6 @@
 {
   "name": "angular-animate",
-  "version": "1.5.7-build.4869+sha.7551b89",
+  "version": "1.5.7-build.4870+sha.9f68b0e",
   "description": "AngularJS module for animations",
   "main": "index.js",
   "scripts": {
