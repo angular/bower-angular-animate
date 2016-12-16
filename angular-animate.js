@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.6.1-build.5207+sha.fbe0b73
+ * @license AngularJS v1.5.10
  * (c) 2010-2016 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1407,7 +1407,7 @@ var $AnimateCssProvider = ['$animateProvider', /** @this */ function($animatePro
           $$jqLite.addClass(element, activeClasses);
 
           if (flags.recalculateTimingStyles) {
-            fullClassName = node.getAttribute('class') + ' ' + preparationClasses;
+            fullClassName = node.className + ' ' + preparationClasses;
             cacheKey = gcsHashFn(node, fullClassName);
 
             timings = computeTimings(node, fullClassName, cacheKey);
@@ -2236,10 +2236,8 @@ var $$AnimateQueueProvider = ['$animateProvider', /** @this */ function($animate
 
   this.$get = ['$$rAF', '$rootScope', '$rootElement', '$document', '$$HashMap',
                '$$animation', '$$AnimateRunner', '$templateRequest', '$$jqLite', '$$forceReflow',
-               '$$isDocumentHidden',
        function($$rAF,   $rootScope,   $rootElement,   $document,   $$HashMap,
-                $$animation,   $$AnimateRunner,   $templateRequest,   $$jqLite,   $$forceReflow,
-                $$isDocumentHidden) {
+                $$animation,   $$AnimateRunner,   $templateRequest,   $$jqLite,   $$forceReflow) {
 
     var activeAnimationsLookup = new $$HashMap();
     var disabledElementsLookup = new $$HashMap();
@@ -2493,7 +2491,7 @@ var $$AnimateQueueProvider = ['$animateProvider', /** @this */ function($animate
         return runner;
       }
 
-      var className = [node.getAttribute('class'), options.addClass, options.removeClass].join(' ');
+      var className = [node.className, options.addClass, options.removeClass].join(' ');
       if (!isAnimatableClassName(className)) {
         close();
         return runner;
@@ -2501,7 +2499,7 @@ var $$AnimateQueueProvider = ['$animateProvider', /** @this */ function($animate
 
       var isStructural = ['enter', 'move', 'leave'].indexOf(event) >= 0;
 
-      var documentHidden = $$isDocumentHidden();
+      var documentHidden = $document[0].hidden;
 
       // this is a hard disable of all animations for the application or on
       // the element itself, therefore  there is no need to continue further
@@ -3912,7 +3910,7 @@ var ngAnimateSwapDirective = ['$animate', '$rootScope', function($animate, $root
            deps="angular-animate.js;angular-route.js"
            animations="true">
     <file name="index.html">
-      <a href="#!/">Home</a>
+      <a href="#/">Home</a>
       <hr />
       <div class="view-container">
         <div ng-view class="view"></div>
@@ -3960,7 +3958,7 @@ var ngAnimateSwapDirective = ['$animate', '$rootScope', function($animate, $root
       <h2>Welcome to the home page</h1>
       <p>Please click on an element</p>
       <a class="record"
-         ng-href="#!/profile/{{ record.id }}"
+         ng-href="#/profile/{{ record.id }}"
          ng-animate-ref="{{ record.id }}"
          ng-repeat="record in records">
         {{ record.title }}
